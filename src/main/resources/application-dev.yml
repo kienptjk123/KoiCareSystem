@@ -1,0 +1,38 @@
+spring:
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: koicaresystem@koicaresystem
+    url: jdbc:sqlserver://koicaresystem.database.windows.net:1433;database=koi-care-system;user=koicaresystem@koicaresystem;password=Applicaion123;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    password: Application123
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: storephuoc@gmail.com
+    password: ncux oxqc ldqu leih
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+  cloud:
+    azure:
+      storage:
+        account-name: koicaresystemstorage
+        account-key: eeuxsDzMoQerTi8gCOdK/Lt79bRARhhRzyigLTmLPOBTTahQu0sM3LjGxI+9pSyEpQtFMoAc5FDC+ASt1WBmVQ==
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 20MB
+      max-file-size: 2MB
