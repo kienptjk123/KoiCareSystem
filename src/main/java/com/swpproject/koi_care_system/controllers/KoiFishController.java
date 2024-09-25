@@ -13,7 +13,6 @@ import com.swpproject.koi_care_system.service.koipond.IKoiPondService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +24,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/koifishs")
 public class KoiFishController {
     private final IKoiFishService koiFishService;
@@ -112,7 +111,4 @@ public class KoiFishController {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(),null));
         }
     }
-
-
-    
 }
