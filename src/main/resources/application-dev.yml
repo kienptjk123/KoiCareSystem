@@ -29,8 +29,8 @@ spring:
   cloud:
     azure:
       storage:
-        account-name: koicaresystemstorage
-        account-key: eeuxsDzMoQerTi8gCOdK/Lt79bRARhhRzyigLTmLPOBTTahQu0sM3LjGxI+9pSyEpQtFMoAc5FDC+ASt1WBmVQ==
+        account-name: koicaresystem
+        account-key: 175TMuZQZ9MwEgVLezP1JPCGZrTK5WFev9/u4pgZ32cywkpMJb+78mxVc9+iU//4MtJcUVS3ey5u+AStaPeOMw==
   servlet:
     multipart:
       enabled: true
