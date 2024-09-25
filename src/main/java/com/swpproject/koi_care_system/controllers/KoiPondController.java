@@ -43,7 +43,7 @@ public class KoiPondController {
             try(InputStream inputStream = file.getInputStream()){
                 imageUrl = this.imageStorage.uploadImage(file.getOriginalFilename(), inputStream, file.getSize());
             } catch (Exception e) {
-                imageUrl = "";
+                imageUrl = "1234567";
             }
             String username = authentication.getName();
             User user = userService.findUserByUserName(username);
