@@ -44,7 +44,7 @@ public class KoiPondService implements IKoiPondService {
     }
     @Override
     public List<KoiPond> getKoiPondByUserID(Long userID) {
-        return koiPondRepository.findByUserId(userID)
+        return  koiPondRepository.findByUserId(userID)
                 .orElseThrow(() -> new ResourceNotFoundException("No Koi Ponds found for user with ID: " + userID));
     }
     @Override
@@ -77,4 +77,11 @@ public class KoiPondService implements IKoiPondService {
         return koiPondMapper.toDto(koiPond);
     }
 
+    @Override
+    public KoiPond getKoiPondWithFishCount(Long pondId) {
+        KoiPond koiPond = koiPondRepository.findById(pondId).orElseThrow(() -> new RuntimeException("KoiPond not found"));
+        int fishCount = koiPondRepository.countKoiFishByPondId(pondId);
+        koiPond.setNumberOfFish(fishCount);
+        return koiPond;
+    }
 }
