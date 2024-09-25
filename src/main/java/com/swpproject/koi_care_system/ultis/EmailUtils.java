@@ -5,4 +5,3 @@ public class EmailUtils {
         return "https://koicaresystem.azurewebsites.net/api/auth/verify?email=" + email + "&token=" + token+ "&redirect=https://koicaresystem.azurewebsites.net/login";
     }
 }
-

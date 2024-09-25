@@ -20,7 +20,7 @@ public class AzureImageStorage implements ImageStorage {
     @Override
     public String uploadImage(String originalImageName, InputStream data, Long length)  throws IOException {
         try{
-            String containerName = "koi-image-container";
+            String containerName = "koicare-blob";
             BlobContainerClient blobContainerClient= blobServiceClient.getBlobContainerClient(containerName);
             String newImageName = UUID.randomUUID().toString() +originalImageName.substring(originalImageName.lastIndexOf("."));
             BlobClient blobClient = blobContainerClient.getBlobClient(newImageName);
