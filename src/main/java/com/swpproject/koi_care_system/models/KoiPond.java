@@ -25,13 +25,10 @@ public class KoiPond {
     private int volume;
     private String imageUrl;
     // Add this method
-    @Transient
-    private int numberOfFish;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    
+
     @OneToMany(mappedBy = "koiPond",cascade = CascadeType.ALL, orphanRemoval = true)
     List<WaterParametersHistory> waterParametersHistoryList;
 

@@ -1,16 +1,13 @@
 package com.swpproject.koi_care_system.dto;
 
 import com.swpproject.koi_care_system.models.Category;
-
-import lombok.*;
+import com.swpproject.koi_care_system.models.Supplier;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class ProductDto {
     private Long id;
     private String name;
@@ -19,4 +16,8 @@ public class ProductDto {
     private int inventory;
     private String description;
     private Category category;
+    private Supplier supplier;
+    private List<ImageDto> images;
+    private List<PromotionDto> promotions;
+
 }

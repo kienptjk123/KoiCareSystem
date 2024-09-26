@@ -1,6 +1,5 @@
 package com.swpproject.koi_care_system.controllers;
 
-
 import com.swpproject.koi_care_system.dto.ProductDto;
 import com.swpproject.koi_care_system.exceptions.ResourceNotFoundException;
 import com.swpproject.koi_care_system.models.Product;
@@ -29,16 +28,11 @@ public class ProductController {
         List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
         return  ResponseEntity.ok(new ApiResponse("success", convertedProducts));
     }
-
     @GetMapping("product/{productId}/product")
-    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
-        try {
-            Product product = productService.getProductById(productId);
-            ProductDto productDto = productService.convertToDto(product);
-            return  ResponseEntity.ok(new ApiResponse("success", productDto));
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
-        }
+    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) throws ResourceNotFoundException {
+        Product product = productService.getProductById(productId);
+        ProductDto productDto = productService.convertToDto(product);
+        return  ResponseEntity.ok(new ApiResponse("success", productDto));
     }
 
     @PostMapping("/add")
@@ -62,7 +56,6 @@ public class ProductController {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
-
     @DeleteMapping("/product/{productId}/delete")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId) {
         try {
@@ -86,7 +79,19 @@ public class ProductController {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
-
+    @GetMapping("/products/by/supplier")
+    public ResponseEntity<ApiResponse> getProductsBySupplier(@RequestParam String supplierName){
+        try{
+            List<Product> productList = productService.getProductsBySupplier(supplierName);
+            if(productList.isEmpty()){
+                return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found ",null));
+            }
+            List<ProductDto> productDtos=productService.getConvertedProducts(productList);
+            return ResponseEntity.ok(new ApiResponse("Success",productDtos));
+        }catch (Exception e){
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error",null));
+        }
+    }
     @GetMapping("/products/by/category-and-brand")
     public ResponseEntity<ApiResponse> getProductByCategoryAndBrand(@RequestParam String category, @RequestParam String brand){
         try {
@@ -152,4 +157,6 @@ public class ProductController {
             return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
         }
     }
+
+
 }
