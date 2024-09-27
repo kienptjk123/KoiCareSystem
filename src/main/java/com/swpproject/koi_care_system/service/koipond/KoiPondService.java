@@ -28,8 +28,8 @@ public class KoiPondService implements IKoiPondService {
     @Override
     @PreAuthorize("hasRole('MEMBER')")
     public KoiPond addKoiPond(AddKoiPondRequest request) {
-        if (koiPondRepository.existsByName(request.getName())) {
-            throw new AlreadyExistsException("A Koi Pond with this name already exists");
+        if (koiPondRepository.existsByNameAndUserId(request.getName(), request.getUser().getId())) {
+            throw new AlreadyExistsException("Koi Pond with name " + request.getName() + " already exists!");
         }
         KoiPond koiPond = new KoiPond(
                 null,

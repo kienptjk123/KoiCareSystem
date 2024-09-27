@@ -16,6 +16,10 @@ import com.swpproject.koi_care_system.repository.ImageRepository;
 import com.swpproject.koi_care_system.repository.ProductRepository;
 import com.swpproject.koi_care_system.repository.SupplierRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -91,10 +95,12 @@ public class ProductService implements IProductService {
         return  existingProduct;
 
     }
-
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<Product> getAllProducts(int pageNumber, int pageSize, String sortBy, String sortDir) {
+        Sort sort = ("Asc".equalsIgnoreCase(sortDir)) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Product> products = productRepository.findAll(pageable);
+        return products.stream().toList();
     }
 
     @Override
