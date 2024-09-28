@@ -99,6 +99,8 @@ public class ProductService implements IProductService {
     public List<Product> getAllProducts(int pageNumber, int pageSize, String sortBy, String sortDir) {
         Sort sort = ("Asc".equalsIgnoreCase(sortDir)) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        List<Product> productsTmp = productRepository.findAll();
+        productsTmp.forEach(this::updateProductRating);
         Page<Product> products = productRepository.findAll(pageable);
         return products.stream().toList();
     }
@@ -157,5 +159,9 @@ public class ProductService implements IProductService {
                 .toList();
         productDto.setPromotions(promotionDtos);
         return productDto;
+    }
+    private void updateProductRating(Product product) {
+        product.updateRating();
+        productRepository.save(product);
     }
 }

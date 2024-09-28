@@ -77,8 +77,16 @@ public class KoiFishService implements IKoiFishService {
     @PreAuthorize("hasRole('MEMBER')")
     public void deleteKoiFish(Long id) {
         koiFishRepository.findById(id)
-                .ifPresentOrElse(koiFishRepository::delete, ()->{
-                    throw new ResourceNotFoundException("Koi fish not found!");
+                .ifPresentOrElse(koiFish->{
+                    try{
+                        if(!koiFish.getImageUrl().isEmpty())
+                            imageStorage.deleteImage(koiFish.getImageUrl());
+                        koiFishRepository.delete(koiFish);
+                    }catch (Exception e){
+                        throw new RuntimeException("Failed to delete the koi fish" + e.getMessage());
+                    }
+                },()->{
+                    throw new ResourceNotFoundException("Koi Fish not found!");
                 });
     }
 
