@@ -55,6 +55,7 @@ public class ProductService implements IProductService {
                 request.getPrice(),
                 request.getInventory(),
                 request.getDescription(),
+                request.getDescription_detail(),
                 category,
                 supplier
         );
@@ -88,6 +89,7 @@ public class ProductService implements IProductService {
         existingProduct.setPrice(request.getPrice());
         existingProduct.setInventory(request.getInventory());
         existingProduct.setDescription(request.getDescription());
+        existingProduct.setDescription_detail(request.getDescription_detail());
         Supplier supplier = supplierRepository.findByName(request.getSupplierName());
         Category category = categoryRepository.findByName(request.getCategory().getName());
         existingProduct.setSupplier(supplier);
