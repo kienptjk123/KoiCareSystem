@@ -2,6 +2,7 @@ package com.swpproject.koi_care_system.payload.request;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.util.annotation.Nullable;
 
 @Data
 public class KoiPondUpdateRequest {
@@ -13,6 +14,7 @@ public class KoiPondUpdateRequest {
     private int skimmer;
     private Double pumpCapacity;
     private String imageUrl;
+    @Nullable
     private MultipartFile file;
     public KoiPondUpdateRequest(String name, int drainCount, int volume, Double depth, int skimmer, Double pumpCapacity, String imageUrl) {
         this.name = name;

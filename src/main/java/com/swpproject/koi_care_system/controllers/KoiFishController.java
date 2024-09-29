@@ -30,6 +30,7 @@ public class KoiFishController {
     public ResponseEntity<ApiResponse> createKoiFish(@ModelAttribute AddKoiFishRequest addKoiFishRequest){
         try{
             addKoiFishRequest.setKoiPond(koiPondService.getKoiPondById(addKoiFishRequest.getKoiPondId()));
+            assert addKoiFishRequest.getFile() != null;
             addKoiFishRequest.setImageUrl(!addKoiFishRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiFishRequest.getFile()):"");
             KoiFish koiFish = koiFishService.addKoiFish(addKoiFishRequest);
             KoiFishDto koiFishDto = koiFishService.convertToDto(koiFish);
@@ -83,6 +84,7 @@ public class KoiFishController {
     public ResponseEntity<ApiResponse> updateKoiFish(@PathVariable Long id,@ModelAttribute KoiFishUpdateRequest koiFishUpdateRequest){
         try{
             koiFishUpdateRequest.setKoiPond(koiPondService.getKoiPondById(koiFishUpdateRequest.getKoiPondId()));
+            assert koiFishUpdateRequest.getFile() != null;
             koiFishUpdateRequest.setImageUrl(koiFishUpdateRequest.getFile().isEmpty()? koiFishUpdateRequest.getImageUrl() :imageStorage.uploadImage(koiFishUpdateRequest.getFile()));
             KoiFish updatedKoiFish = koiFishService.updateKoiFish(koiFishUpdateRequest,id);
             KoiFishDto koiFishDto = koiFishService.convertToDto(updatedKoiFish);

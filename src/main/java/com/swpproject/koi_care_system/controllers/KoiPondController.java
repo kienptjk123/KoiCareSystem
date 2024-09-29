@@ -33,6 +33,7 @@ public class KoiPondController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createKoiPond(@ModelAttribute AddKoiPondRequest addKoiPondRequest, Authentication authentication) {
         try{
+            assert addKoiPondRequest.getFile() != null;
             addKoiPondRequest.setImageUrl(!addKoiPondRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiPondRequest.getFile()):"");
             String username = authentication.getName();
             User user = userService.findUserByUserName(username);
@@ -76,6 +77,7 @@ public class KoiPondController {
     @PutMapping("/koipond/{id}/update")
     public ResponseEntity<ApiResponse> updateKoiPond(@PathVariable Long id,@ModelAttribute KoiPondUpdateRequest koiPondUpdateRequest) {
         try {
+            assert koiPondUpdateRequest.getFile() != null;
             koiPondUpdateRequest.setImageUrl(!koiPondUpdateRequest.getFile().isEmpty()?imageStorage.uploadImage(koiPondUpdateRequest.getFile()): koiPondUpdateRequest.getImageUrl());
             KoiPond updatedKoiPond = koiPondService.updateKoiPond(koiPondUpdateRequest, id);
             KoiPondDto koiPondDto = koiPondService.convertToDto(updatedKoiPond);

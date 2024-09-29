@@ -27,6 +27,7 @@ public class BlogController {
     public ResponseEntity<ApiResponse> createBlog(@ModelAttribute BlogCreateRequest blogCreateRequest, Authentication authentication){
         try {
             String username = authentication.getName();
+            assert blogCreateRequest.getFile() != null;
             blogCreateRequest.setBlogImage(!blogCreateRequest.getFile().isEmpty() ? imageStorage.uploadImage(blogCreateRequest.getFile()) : "");
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.builder()
                     .data(blogService.createBlog(blogCreateRequest, username))
@@ -39,6 +40,7 @@ public class BlogController {
     @PutMapping("/update/{blogId}")
     public ResponseEntity<ApiResponse> updateBlog(@PathVariable int blogId, @ModelAttribute BlogUpdateRequest blogUpdateRequest){
         try {
+            assert blogUpdateRequest.getFile() != null;
             blogUpdateRequest.setBlogImage(!blogUpdateRequest.getFile().isEmpty() ? imageStorage.uploadImage(blogUpdateRequest.getFile()): blogUpdateRequest.getBlogImage());
             return ResponseEntity.ok(ApiResponse.builder()
                     .data(blogService.updateBlog(blogId, blogUpdateRequest))

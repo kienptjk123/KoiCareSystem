@@ -2,7 +2,6 @@ package com.swpproject.koi_care_system.service.log;
 
 import com.swpproject.koi_care_system.dto.LogDto;
 import com.swpproject.koi_care_system.enums.LogCategory;
-import com.swpproject.koi_care_system.exceptions.ResourceNotFoundException;
 import com.swpproject.koi_care_system.mapper.LogMapper;
 import com.swpproject.koi_care_system.models.KoiPond;
 import com.swpproject.koi_care_system.models.Log;
@@ -39,31 +38,15 @@ public class LogService implements ILogService {
     @Override
     public LogDto updateLog(int logId, LogUpdateRequest request) {
         Log log = logRepository.findById(logId).orElseThrow(() -> new RuntimeException("Log not found"));
-        if(!log.getImage().isEmpty()){
-            try{
-                imageStorage.deleteImage(log.getImage());
-            }catch (Exception e){
-                throw new RuntimeException(e);
-            }
-        }
         logMapper.updateLog(log, request);
         return logMapper.mapToLogDto(logRepository.save(log));
     }
 
     @Override
     public void deleteLog(int logId) {
-        logRepository.findById(logId).ifPresentOrElse(log->{
-            try{
-                if(!log.getImage().isEmpty())
-                    imageStorage.deleteImage(log.getImage());
-                logRepository.delete(log);
-            }catch (Exception e){
-                throw new RuntimeException("Failed to delete the log" + e.getMessage());
-            }
-        },()->{
-            throw new ResourceNotFoundException("Log not found!");
+        logRepository.findById(logId).ifPresentOrElse(logRepository::delete, () -> {
+            throw new RuntimeException("Log not found");
         });
-
     }
 
     @Override

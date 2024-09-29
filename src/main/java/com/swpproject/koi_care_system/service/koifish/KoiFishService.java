@@ -77,16 +77,8 @@ public class KoiFishService implements IKoiFishService {
     @PreAuthorize("hasRole('MEMBER')")
     public void deleteKoiFish(Long id) {
         koiFishRepository.findById(id)
-                .ifPresentOrElse(koiFish->{
-                    try{
-                        if(!koiFish.getImageUrl().isEmpty())
-                            imageStorage.deleteImage(koiFish.getImageUrl());
-                        koiFishRepository.delete(koiFish);
-                    }catch (Exception e){
-                        throw new RuntimeException("Failed to delete the koi fish" + e.getMessage());
-                    }
-                },()->{
-                    throw new ResourceNotFoundException("Koi Fish not found!");
+                .ifPresentOrElse(koiFishRepository::delete, ()->{
+                    throw new ResourceNotFoundException("Koi fish not found!");
                 });
     }
 
@@ -94,13 +86,6 @@ public class KoiFishService implements IKoiFishService {
     @PreAuthorize("hasRole('MEMBER')")
     public KoiFish updateKoiFish(KoiFishUpdateRequest koiFishUpdateRequest, Long koiFishId) {
         return Optional.ofNullable(getKoiFishById(koiFishId)).map(oldKoiFish ->{
-            if(!oldKoiFish.getImageUrl().isEmpty()){
-                try {
-                    imageStorage.deleteImage(oldKoiFish.getImageUrl());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
             oldKoiFish.setName(koiFishUpdateRequest.getName());
             oldKoiFish.setAge(koiFishUpdateRequest.getAge());
             oldKoiFish.setGender(koiFishUpdateRequest.getGender());

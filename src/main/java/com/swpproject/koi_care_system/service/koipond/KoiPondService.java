@@ -59,15 +59,7 @@ public class KoiPondService implements IKoiPondService {
     @PreAuthorize("hasRole('MEMBER')")
     public void deleteKoiPond(Long id) {
         koiPondRepository.findById(id)
-                .ifPresentOrElse(koiPond->{
-                    try{
-                        if(!koiPond.getImageUrl().isEmpty())
-                            imageStorage.deleteImage(koiPond.getImageUrl());
-                        koiPondRepository.delete(koiPond);
-                    }catch (Exception e){
-                        throw new RuntimeException("Failed to delete the koi pond" + e.getMessage());
-                    }
-                },()->{
+                .ifPresentOrElse(koiPondRepository::delete, () -> {
                     throw new ResourceNotFoundException("Koi Pond not found!");
                 });
     }
@@ -75,13 +67,6 @@ public class KoiPondService implements IKoiPondService {
     @PreAuthorize("hasRole('MEMBER')")
     public KoiPond updateKoiPond(KoiPondUpdateRequest koiPondUpdateRequest, Long koiPondId) {
         return Optional.ofNullable(getKoiPondById(koiPondId)).map(oldKoiPond -> {
-            if(!oldKoiPond.getImageUrl().isEmpty()) {
-                try {
-                    imageStorage.deleteImage(oldKoiPond.getImageUrl());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
             oldKoiPond.setName(koiPondUpdateRequest.getName());
             oldKoiPond.setDepth(koiPondUpdateRequest.getDepth());
             oldKoiPond.setDrainCount(koiPondUpdateRequest.getDrainCount());
