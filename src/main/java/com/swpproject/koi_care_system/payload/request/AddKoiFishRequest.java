@@ -23,7 +23,6 @@ public class AddKoiFishRequest {
     private Long koiPondId;
     private KoiPond koiPond;
     private String imageUrl;
-    @Nullable
     private MultipartFile file;
     public AddKoiFishRequest(String name, String physique, int age, Double length, Double weight,
                              String gender, String variety, LocalDate pondDate, String breeder, Double price, KoiPond koiPond, String imageUrl) {

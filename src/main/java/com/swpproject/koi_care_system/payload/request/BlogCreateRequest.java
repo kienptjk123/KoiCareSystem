@@ -22,7 +22,6 @@ public class BlogCreateRequest {
     String blogContent;
     String blogImage;
     Set<Integer> tagIds;
-    @Nullable
     MultipartFile file;
 
 }

@@ -26,6 +26,4 @@ public class LogUpdateRequest {
     String image;
     @NotNull
     long koiPondId;
-    @Nullable
-    MultipartFile file;
 }

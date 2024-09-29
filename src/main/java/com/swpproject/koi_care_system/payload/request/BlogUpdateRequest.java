@@ -20,9 +20,7 @@ public class BlogUpdateRequest {
     String blogTitle;
     @NotBlank
     String blogContent;
-    String blogImage;
     String blogDate;
     Set<Integer> tagIds;
-    @Nullable
     MultipartFile file;
 }

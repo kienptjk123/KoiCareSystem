@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface BlogMapper {
+    @Mapping(target = "blogId", ignore = true)
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "blogDate", ignore = true)
     @Mapping(target = "user", ignore = true)
@@ -17,6 +18,7 @@ public interface BlogMapper {
 
     BlogDto mapToBlogDto(Blog blog);
 
+    @Mapping(target = "blogId", ignore = true)
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "user", ignore = true)
     void updateBlog(@MappingTarget Blog blog, BlogUpdateRequest request);

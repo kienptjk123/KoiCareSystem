@@ -31,25 +31,13 @@ public class KoiFishService implements IKoiFishService {
     ImageStorage imageStorage;
     @Override
     @PreAuthorize("hasRole('MEMBER')")
-    public KoiFish addKoiFish(AddKoiFishRequest addKoiFishRequest) {
+    public KoiFish addKoiFish(AddKoiFishRequest addKoiFishRequest) throws IOException {
         if(koiFishRepository.existsByName(addKoiFishRequest.getName())){
             throw new AlreadyExistsException("A Koi fish with this name already exists");
         }
-        KoiFish koiFish = new KoiFish(
-                null,
-                addKoiFishRequest.getName(),
-                addKoiFishRequest.getPhysique(),
-                addKoiFishRequest.getAge(),
-                addKoiFishRequest.getLength(),
-                addKoiFishRequest.getWeight(),
-                addKoiFishRequest.getGender(),
-                addKoiFishRequest.getVariety(),
-                addKoiFishRequest.getPondDate(),
-                addKoiFishRequest.getBreeder(),
-                addKoiFishRequest.getPrice(),
-                addKoiFishRequest.getKoiPond(),
-                addKoiFishRequest.getImageUrl()
-        );
+        addKoiFishRequest.setKoiPond(koiPondService.getKoiPondById(addKoiFishRequest.getKoiPondId()));
+        addKoiFishRequest.setImageUrl(!addKoiFishRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiFishRequest.getFile()):"");
+        KoiFish koiFish = koiFishMapper.mapToKoiFish(addKoiFishRequest);
         koiFish.setStatus("Alive");
         return koiFishRepository.save(koiFish);
     }
@@ -68,33 +56,41 @@ public class KoiFishService implements IKoiFishService {
 
     @Override
     public List<KoiFish> getAllFishByUserId(Long userId) {
-        return koiPondService.getKoiPondByUserID(userId).stream().map(koiPond -> {
-            return koiFishRepository.findByKoiPondId(koiPond.getId())
-                    .orElse(List.of());
-        }).flatMap(List::stream).toList();
+        return koiPondService.getKoiPondByUserID(userId).stream().map(koiPond -> koiFishRepository.findByKoiPondId(koiPond.getId())
+                .orElse(List.of())).flatMap(List::stream).toList();
     }
     @Override
     @PreAuthorize("hasRole('MEMBER')")
     public void deleteKoiFish(Long id) {
         koiFishRepository.findById(id)
-                .ifPresentOrElse(koiFishRepository::delete, ()->{
-                    throw new ResourceNotFoundException("Koi fish not found!");
-                });
+            .ifPresentOrElse(koiFish->{
+                try{
+                    if(!koiFish.getImageUrl().isEmpty())
+                        imageStorage.deleteImage(koiFish.getImageUrl());
+                    koiFishRepository.delete(koiFish);
+                }catch (Exception e){
+                    throw new RuntimeException("Failed to delete the koi fish" + e.getMessage());
+                }
+            },()-> {
+                throw new ResourceNotFoundException("Koi Fish not found!");
+            });
     }
 
     @Override
     @PreAuthorize("hasRole('MEMBER')")
     public KoiFish updateKoiFish(KoiFishUpdateRequest koiFishUpdateRequest, Long koiFishId) {
         return Optional.ofNullable(getKoiFishById(koiFishId)).map(oldKoiFish ->{
-            oldKoiFish.setName(koiFishUpdateRequest.getName());
-            oldKoiFish.setAge(koiFishUpdateRequest.getAge());
-            oldKoiFish.setGender(koiFishUpdateRequest.getGender());
-            oldKoiFish.setVariety(koiFishUpdateRequest.getVariety());
-            oldKoiFish.setPondDate(koiFishUpdateRequest.getPondDate());
-            oldKoiFish.setBreeder(koiFishUpdateRequest.getBreeder());
-            oldKoiFish.setPrice(koiFishUpdateRequest.getPrice());
-            oldKoiFish.setKoiPond(koiFishUpdateRequest.getKoiPond());
-            oldKoiFish.setImageUrl(koiFishUpdateRequest.getImageUrl());
+            if(!koiFishUpdateRequest.getFile().isEmpty()){
+                try {
+                    if(!oldKoiFish.getImageUrl().isEmpty()) {
+                        imageStorage.deleteImage(oldKoiFish.getImageUrl());
+                    }
+                    oldKoiFish.setImageUrl(imageStorage.uploadImage(koiFishUpdateRequest.getFile()));
+                }catch (Exception e){
+                    throw new RuntimeException(e);
+                }
+            }
+            koiFishMapper.updateToKoiFish(oldKoiFish,koiFishUpdateRequest);
             return koiFishRepository.save(oldKoiFish);
         }).orElseThrow(() -> new ResourceNotFoundException("Koi fish not found!"));
     }

@@ -16,7 +16,6 @@ public class AddKoiPondRequest {
     private Double pumpCapacity;
     private User user;
     private String imageUrl;
-    @Nullable
     private MultipartFile file;
     public AddKoiPondRequest(String name, int drainCount, int volume, Double depth, int skimmer, Double pumpCapacity, User user, String imageUrl) {
         this.name = name;

@@ -25,7 +25,6 @@ public class LogService implements ILogService {
     LogMapper logMapper;
     LogRepository logRepository;
     KoiPondRepository koiPondRepository;
-    ImageStorage imageStorage;
 
     @Override
     public LogDto createLog(LogCreateRequest request, long pondId) {
