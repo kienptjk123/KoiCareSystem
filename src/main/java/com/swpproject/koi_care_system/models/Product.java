@@ -49,8 +49,7 @@ public class Product {
             return 0.0;
         }
         double sum = feedbacks.stream().mapToInt(Feedback::getStar).sum();
-        double average = sum / feedbacks.size();
-        return Math.round(average * 2) / 2.0;
+        return sum / feedbacks.size();
     }
     @PrePersist
     @PreUpdate
