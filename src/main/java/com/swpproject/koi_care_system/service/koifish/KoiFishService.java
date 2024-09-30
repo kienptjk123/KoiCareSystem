@@ -81,6 +81,7 @@ public class KoiFishService implements IKoiFishService {
                         throw new RuntimeException(e);
                     }
                 }
+            koiFishUpdateRequest.setKoiPond(koiPondService.getKoiPondById(koiFishUpdateRequest.getKoiPondId()));
             koiFishMapper.updateToKoiFish(oldKoiFish,koiFishUpdateRequest);
             return koiFishRepository.save(oldKoiFish);
         }).orElseThrow(() -> new ResourceNotFoundException("Koi fish not found!"));
