@@ -31,7 +31,8 @@ public class KoiPondService implements IKoiPondService {
         if (koiPondRepository.existsByNameAndUserId(addKoiPondRequest.getName(), addKoiPondRequest.getUser().getId())) {
             throw new AlreadyExistsException("Koi Pond with name " + addKoiPondRequest.getName() + " already exists!");
         }
-        addKoiPondRequest.setImageUrl(!addKoiPondRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiPondRequest.getFile()):"");
+        if(addKoiPondRequest.getFile()!=null)
+            addKoiPondRequest.setImageUrl(!addKoiPondRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiPondRequest.getFile()):"");
         return koiPondRepository.save(koiPondMapper.mapToKoiPond(addKoiPondRequest));
     }
     @Override
@@ -49,31 +50,22 @@ public class KoiPondService implements IKoiPondService {
     @PreAuthorize("hasRole('MEMBER')")
     public void deleteKoiPond(Long id) {
         koiPondRepository.findById(id)
-                .ifPresentOrElse(koiPond->{
-                    try{
-                        if(!koiPond.getImageUrl().isEmpty())
-                            imageStorage.deleteImage(koiPond.getImageUrl());
-                        koiPondRepository.delete(koiPond);
-                    }catch (Exception e){
-                        throw new RuntimeException("Failed to delete the koi pond" + e.getMessage());
-                    }
-                },()-> {
+                .ifPresentOrElse(koiPondRepository::delete,()-> {
                     throw new ResourceNotFoundException("Koi Pond not found!");
                 });
+
     }
     @Override
     @PreAuthorize("hasRole('MEMBER')")
     public KoiPond updateKoiPond(KoiPondUpdateRequest koiPondUpdateRequest, Long koiPondId) {
         return Optional.ofNullable(getKoiPondById(koiPondId)).map(oldKoiPond -> {
-            if(!koiPondUpdateRequest.getFile().isEmpty()){
-                try {
-                    if(!oldKoiPond.getImageUrl().isEmpty()) {
-                        imageStorage.deleteImage(oldKoiPond.getImageUrl());
+            if(koiPondUpdateRequest.getFile()!=null) {
+                if(!koiPondUpdateRequest.getFile().isEmpty())
+                    try {
+                        oldKoiPond.setImageUrl(imageStorage.uploadImage(koiPondUpdateRequest.getFile()));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                    oldKoiPond.setImageUrl(imageStorage.uploadImage(koiPondUpdateRequest.getFile()));
-                }catch (Exception e){
-                    throw new RuntimeException(e);
-                }
             }
             koiPondMapper.updateToKoiPond(oldKoiPond,koiPondUpdateRequest);
             return koiPondRepository.save(oldKoiPond);

@@ -42,7 +42,8 @@ public class BlogService implements IBlogService {
         if (blogRepository.existsByBlogTitle(blogCreateRequest.getBlogTitle())) {
             throw new RuntimeException("Blog already exists");
         }
-        blogCreateRequest.setBlogImage(!blogCreateRequest.getFile().isEmpty()?imageStorage.uploadImage(blogCreateRequest.getFile()):"");
+        if(blogCreateRequest.getFile()!=null)
+            blogCreateRequest.setBlogImage(!blogCreateRequest.getFile().isEmpty()?imageStorage.uploadImage(blogCreateRequest.getFile()):"");
         Blog blog = blogMapper.mapToBlog(blogCreateRequest);
         blog.setBlogDate(java.time.LocalDate.now());
         Set<Tag> tags = new HashSet<>();
@@ -64,16 +65,14 @@ public class BlogService implements IBlogService {
                 throw new RuntimeException("Blog title already exists");
             }
         }
-        if(!blogUpdateRequest.getFile().isEmpty()){
-            try{
-                if(!blog.getBlogImage().isEmpty()){
-                    imageStorage.deleteImage(blog.getBlogImage());
+        if(blogUpdateRequest.getFile()!=null)
+            if(!blogUpdateRequest.getFile().isEmpty()){
+                try{
+                    blog.setBlogImage(imageStorage.uploadImage(blogUpdateRequest.getFile()));
+                }catch (Exception e){
+                    throw new RuntimeException(e);
                 }
-                blog.setBlogImage(imageStorage.uploadImage(blogUpdateRequest.getFile()));
-            }catch (Exception e){
-                throw new RuntimeException(e);
             }
-        }
         blogMapper.updateBlog(blog, blogUpdateRequest);
         Set<Tag> tags = new HashSet<>();
         for (int tagId : blogUpdateRequest.getTagIds()) {
@@ -87,15 +86,7 @@ public class BlogService implements IBlogService {
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasRole('SHOP')")
     public void deleteBlog(int id) {
-        blogRepository.findById(id).ifPresentOrElse(blog->{
-            try{
-                if(!blog.getBlogImage().isEmpty())
-                    imageStorage.deleteImage(blog.getBlogImage());
-                blogRepository.delete(blog);
-            }catch (Exception e){
-                throw new RuntimeException("Failed to delete the blog" + e.getMessage());
-            }
-        },()->{
+        blogRepository.findById(id).ifPresentOrElse(blogRepository::delete,()->{
             throw new ResourceNotFoundException("Blog not found!");
         });
     }
