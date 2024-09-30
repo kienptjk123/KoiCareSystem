@@ -1,21 +1,22 @@
-package com.swpproject.koi_care_system.dto;
+package com.swpproject.koi_care_system.payload.response;
 
 import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
-public class UserDTO {
+public class LoginResponse {
     Long id;
     String username;
     @Email
     String email;
     String role;
+    String token;
     boolean status;
 }

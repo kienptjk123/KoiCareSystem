@@ -39,7 +39,7 @@ public class WaterParametersController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAllWaterParameters(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "4") int pageSize, @RequestParam(defaultValue = "createDateTime") String sortBy, @RequestParam(defaultValue = "Desc") String sortDir) {
+    public ResponseEntity<ApiResponse> getAllWaterParameters(@RequestParam(defaultValue = "0") int pageNumber, @RequestParam(defaultValue = "4" ) int pageSize, @RequestParam(defaultValue = "createDateTime") String sortBy, @RequestParam(defaultValue = "Desc") String sortDir) {
         return ResponseEntity.ok(ApiResponse.builder()
                 .message("Water parameters list")
                 .data(waterParameterService.getAllWaterParameters(pageNumber, pageSize, sortBy, sortDir))
