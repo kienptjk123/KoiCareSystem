@@ -47,7 +47,6 @@ public class ProductService implements IProductService {
         Supplier supplier = supplierRepository.findByName(request.getSupplierName());
         return productRepository.save(createProduct(request, category,supplier));
     }
-
     private Product createProduct(AddProductRequest request, Category category, Supplier supplier) {
         return new Product(
                 request.getName(),

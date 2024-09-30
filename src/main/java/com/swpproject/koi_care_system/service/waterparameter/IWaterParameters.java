@@ -16,5 +16,6 @@ public interface IWaterParameters {
     List<WaterParameterDto> getAllWaterParameters(int pageNumber, int pageSize, String sortBy, String sortDir);
 
     WaterParameterDto getWaterParametersById(long id);
+    List<WaterParameterDto> getAllWaterParametersByKoiPondId(Long koiPondId);
 
 }

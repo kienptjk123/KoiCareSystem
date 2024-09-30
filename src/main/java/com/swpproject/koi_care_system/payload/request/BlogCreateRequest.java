@@ -23,5 +23,4 @@ public class BlogCreateRequest {
     String blogImage;
     Set<Integer> tagIds;
     MultipartFile file;
-
 }
