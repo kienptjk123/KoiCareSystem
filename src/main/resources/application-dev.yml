@@ -62,5 +62,3 @@ spring:
             token-uri: https://github.com/login/oauth/access_token
             user-info-uri: https://api.github.com/user
             user-name-attribute: id
-jwt:
-  signerKey: "1Xt6QiR02nO30C3YVxkkG/qxQQ9sECaUY44pi2Do2SgF/OACYM7RKc/M+ED95TsX"
