@@ -23,7 +23,6 @@ public class LogUpdateRequest {
     LocalDateTime logDate;
     String category;
     String note;
-    String image;
     @NotNull
     long koiPondId;
 }

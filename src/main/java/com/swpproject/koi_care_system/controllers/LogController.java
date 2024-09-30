@@ -22,8 +22,6 @@ public class LogController {
     @PostMapping("/create")
     public ResponseEntity<ApiResponse> createLog(@ModelAttribute LogCreateRequest logCreateRequest) {
         try{
-            assert logCreateRequest.getFile() != null;
-            logCreateRequest.setImage(!logCreateRequest.getFile().isEmpty()?imageStorage.uploadImage(logCreateRequest.getFile()):"");
             return ResponseEntity.ok(ApiResponse.builder()
                     .data(logService.createLog(logCreateRequest, logCreateRequest.getKoiPondId()))
                     .message("Log has been created")
@@ -36,8 +34,6 @@ public class LogController {
     @PutMapping("/update/{logId}")
     public ResponseEntity<ApiResponse> updateLog(@PathVariable int logId, @ModelAttribute LogUpdateRequest logUpdateRequest) {
         try{
-            assert logUpdateRequest.getFile() != null;
-            logUpdateRequest.setImage(!logUpdateRequest.getFile().isEmpty()?imageStorage.uploadImage(logUpdateRequest.getFile()): logUpdateRequest.getImage());
             return ResponseEntity.ok(ApiResponse.builder()
                     .data(logService.updateLog(logId, logUpdateRequest))
                     .message("Log has been updated")

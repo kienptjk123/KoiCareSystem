@@ -9,7 +9,6 @@ import com.swpproject.koi_care_system.payload.request.LogCreateRequest;
 import com.swpproject.koi_care_system.payload.request.LogUpdateRequest;
 import com.swpproject.koi_care_system.repository.KoiPondRepository;
 import com.swpproject.koi_care_system.repository.LogRepository;
-import com.swpproject.koi_care_system.service.imageBlobStorage.ImageStorage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
