@@ -3,7 +3,6 @@ package com.swpproject.koi_care_system.controllers;
 import com.swpproject.koi_care_system.payload.request.LogCreateRequest;
 import com.swpproject.koi_care_system.payload.request.LogUpdateRequest;
 import com.swpproject.koi_care_system.payload.response.ApiResponse;
-import com.swpproject.koi_care_system.service.imageBlobStorage.ImageStorage;
 import com.swpproject.koi_care_system.service.log.ILogService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,30 +16,21 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @RequiredArgsConstructor
 public class LogController {
     private final ILogService logService;
-    private final ImageStorage imageStorage;
 
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createLog(@ModelAttribute LogCreateRequest logCreateRequest) {
-        try{
-            return ResponseEntity.ok(ApiResponse.builder()
-                    .data(logService.createLog(logCreateRequest, logCreateRequest.getKoiPondId()))
-                    .message("Log has been created")
-                    .build());
-        }catch (Exception e){
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
-        }
-    }
+    public ResponseEntity<ApiResponse> createLog(@RequestBody @Valid LogCreateRequest logCreateRequest) {
+        return ResponseEntity.ok(ApiResponse.builder()
+                .data(logService.createLog(logCreateRequest, logCreateRequest.getKoiPondId()))
+                .message("Log has been created")
+                .build());
 
+    }
     @PutMapping("/update/{logId}")
-    public ResponseEntity<ApiResponse> updateLog(@PathVariable int logId, @ModelAttribute LogUpdateRequest logUpdateRequest) {
-        try{
-            return ResponseEntity.ok(ApiResponse.builder()
-                    .data(logService.updateLog(logId, logUpdateRequest))
-                    .message("Log has been updated")
-                    .build());
-        }catch (Exception e){
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
-        }
+    public ResponseEntity<ApiResponse> updateLog(@PathVariable int logId, @RequestBody @Valid LogUpdateRequest logUpdateRequest) {
+        return ResponseEntity.ok(ApiResponse.builder()
+                .data(logService.updateLog(logId, logUpdateRequest))
+                .message("Log has been updated")
+                .build());
     }
     @DeleteMapping("/delete/{logId}")
     public ResponseEntity<ApiResponse> deleteLog(@PathVariable int logId) {
