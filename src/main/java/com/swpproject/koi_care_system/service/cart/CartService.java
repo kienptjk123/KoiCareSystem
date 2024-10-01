@@ -4,6 +4,7 @@ import com.swpproject.koi_care_system.exceptions.ResourceNotFoundException;
 import com.swpproject.koi_care_system.models.Cart;
 import com.swpproject.koi_care_system.repository.CartItemRepository;
 import com.swpproject.koi_care_system.repository.CartRepository;
+import com.swpproject.koi_care_system.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CartService implements ICartService{
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final UserRepository userRepository;
     private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     @Override
@@ -45,12 +47,12 @@ public class CartService implements ICartService{
     }
 
     @Override
-    public Long initializeNewCart() {
+    public Long initializeNewCart(Long userId) {
         Cart newCart = new Cart();
+        newCart.setUser(userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found")));;
         Long newCartId = cartIdGenerator.incrementAndGet();
         newCart.setId(newCartId);
         return cartRepository.save(newCart).getId();
-
     }
 
     @Override
