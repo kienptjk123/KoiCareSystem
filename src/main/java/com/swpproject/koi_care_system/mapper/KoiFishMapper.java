@@ -14,7 +14,7 @@ public interface KoiFishMapper {
 
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "remarkList", ignore = true)
-    @Mapping(target = "growHistoryList", ignore = true)
+    @Mapping(target = "growthHistoryList", ignore = true)
     KoiFish mapToKoiFish(AddKoiFishRequest addKoiFishRequest);
 
     @Mapping(target = "imageUrl", ignore = true)
@@ -22,7 +22,7 @@ public interface KoiFishMapper {
     @Mapping(target = "remarkList", ignore = true)
     @Mapping(target = "physique", ignore = true)
     @Mapping(target = "length", ignore = true)
-    @Mapping(target = "growHistoryList", ignore = true)
+    @Mapping(target = "growthHistoryList", ignore = true)
     void updateToKoiFish(@MappingTarget KoiFish koiFish, KoiFishUpdateRequest koiFishUpdateRequest);
 
 }
