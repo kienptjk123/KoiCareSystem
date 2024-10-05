@@ -77,6 +77,7 @@ public class FeedbackService implements IFeedbackService {
         dto.setComment(feedback.getComment());
         dto.setUsername(feedback.getUser().getUsername());
         dto.setProduct_id(feedback.getProduct().getId());
+        dto.setUserId(feedback.getUser().getId());
         return dto;
     }
 }
