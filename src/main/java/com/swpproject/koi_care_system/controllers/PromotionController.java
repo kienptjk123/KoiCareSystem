@@ -32,7 +32,7 @@ public class PromotionController {
     }
 
     @PutMapping("/promotion/{id}/update")
-    public ResponseEntity<ApiResponse> updatePromotion(@PathVariable Long id, PromotionUpdateRequest promotionUpdateRequest){
+    public ResponseEntity<ApiResponse> updatePromotion(@PathVariable Long id,@RequestBody PromotionUpdateRequest promotionUpdateRequest){
         try{
             PromotionDto promotionDto = promotionService.updatePromotion(id,promotionUpdateRequest);
             return ResponseEntity.ok(new ApiResponse("Update promotion success", promotionDto));
