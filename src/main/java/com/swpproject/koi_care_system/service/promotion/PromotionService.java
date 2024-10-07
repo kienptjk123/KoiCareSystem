@@ -82,6 +82,7 @@ public class PromotionService implements IPromotionService {
                     }
                 }
             }
+            promotionRepository.save(promotion);
            return promotionMapper.mapToDto(promotion);
         }).toList();
     }
