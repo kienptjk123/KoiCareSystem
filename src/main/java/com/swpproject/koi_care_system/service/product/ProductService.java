@@ -16,6 +16,8 @@ import com.swpproject.koi_care_system.repository.CategoryRepository;
 import com.swpproject.koi_care_system.repository.ImageRepository;
 import com.swpproject.koi_care_system.repository.ProductRepository;
 import com.swpproject.koi_care_system.repository.SupplierRepository;
+import com.swpproject.koi_care_system.service.promotion.IPromotionService;
+import com.swpproject.koi_care_system.service.promotion.PromotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +39,7 @@ public class ProductService implements IProductService {
     private final ImageRepository imageRepository;
     private final ImageMapper imageMapper;
     private final SupplierRepository supplierRepository;
+    private final IPromotionService promotionService;
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasRole('SHOP')")
     public Product addProduct(AddProductRequest request) {
@@ -102,21 +105,19 @@ public class ProductService implements IProductService {
     public List<Product> getAllProducts(int pageNumber, int pageSize, String sortBy, String sortDir) {
         Sort sort = ("Asc".equalsIgnoreCase(sortDir)) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        promotionService.upToDate();
         List<Product> productsTmp = productRepository.findAll();
         productsTmp.forEach(product->{
             updateProductRating(product);
             product.getPromotions().forEach(promotion -> {
-                if(promotion.getEndDate().isBefore(LocalDate.now())){
-                    promotion.setStatus(PromotionStatus.ENDED);
-                    product.getPromotions().remove(promotion);
-                }
+                product.getPromotions().removeIf(promotion1 -> {
+                    return promotion1.getStatus().equals(PromotionStatus.ENDED);
+                });
             });
         });
         Page<Product> products = productRepository.findAll(pageable);
         return products.stream().toList();
     }
-
-
     @Override
     public List<Product> getProductsByCategory(String category) {
         return productRepository.findByCategoryName(category);
