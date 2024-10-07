@@ -39,7 +39,6 @@ public class FeedbackService implements IFeedbackService {
         feedback.setComment(request.getComment());
         feedback.setUser(user);
         feedback.setProduct(product);
-
         Feedback savedFeedback = feedbackRepository.save(feedback);
         return convertToDto(savedFeedback);
     }
