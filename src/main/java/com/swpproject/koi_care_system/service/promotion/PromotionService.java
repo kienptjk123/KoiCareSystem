@@ -44,7 +44,12 @@ public class PromotionService implements IPromotionService {
     public PromotionDto updatePromotion(Long id, PromotionUpdateRequest promotionUpdateRequest) {
         Promotion promotion = promotionRepository.findById(promotionUpdateRequest.getId())
                 .orElseThrow(()-> new ResourceNotFoundException("No promotion found with this id"));
-        promotionMapper.updatePromotion(promotion,promotionUpdateRequest);
+        promotion.setName(promotionUpdateRequest.getName());
+        promotion.setDescription(promotionUpdateRequest.getDescription());
+        promotion.setDiscountRate(promotionUpdateRequest.getDiscountRate());
+        promotion.setEndDate(promotionUpdateRequest.getEndDate());
+        promotion.setStartDate(promotionUpdateRequest.getStartDate());
+        promotion.setStatus(promotionUpdateRequest.getStatus());
         return promotionMapper.mapToDto(promotionRepository.save(promotion));
     }
 
