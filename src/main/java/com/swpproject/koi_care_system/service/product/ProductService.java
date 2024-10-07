@@ -2,6 +2,7 @@ package com.swpproject.koi_care_system.service.product;
 import com.swpproject.koi_care_system.dto.ImageDto;
 import com.swpproject.koi_care_system.dto.ProductDto;
 import com.swpproject.koi_care_system.dto.PromotionDto;
+import com.swpproject.koi_care_system.enums.PromotionStatus;
 import com.swpproject.koi_care_system.exceptions.ResourceNotFoundException;
 import com.swpproject.koi_care_system.mapper.ImageMapper;
 import com.swpproject.koi_care_system.mapper.ProductMapper;
@@ -106,7 +107,7 @@ public class ProductService implements IProductService {
             updateProductRating(product);
             product.getPromotions().forEach(promotion -> {
                 if(promotion.getEndDate().isBefore(LocalDate.now())){
-                    promotion.setStatus("END");
+                    promotion.setStatus(PromotionStatus.ENDED);
                     product.getPromotions().remove(promotion);
                 }
             });
@@ -114,6 +115,7 @@ public class ProductService implements IProductService {
         Page<Product> products = productRepository.findAll(pageable);
         return products.stream().toList();
     }
+
 
     @Override
     public List<Product> getProductsByCategory(String category) {
