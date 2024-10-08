@@ -9,6 +9,8 @@ import com.swpproject.koi_care_system.payload.request.ParametersCreateRequest;
 import com.swpproject.koi_care_system.payload.request.ParametersUpdateRequest;
 import com.swpproject.koi_care_system.repository.KoiPondRepository;
 import com.swpproject.koi_care_system.repository.WaterParametersRepository;
+import com.swpproject.koi_care_system.service.issue.IssueService;
+import com.swpproject.koi_care_system.service.issue.IssueTypeService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,13 +32,18 @@ public class WaterParameterService implements IWaterParameters {
     WaterParametersRepository waterParametersRepository;
     WaterParameterMapper waterParameterMapper;
     KoiPondRepository koiPondRepository;
+    IssueService issueService;
+    IssueTypeService issueTypeService;
 
     @Override
     public WaterParameterDto createWaterParameters(ParametersCreateRequest parametersCreateRequest) {
         KoiPond koiPond = koiPondRepository.findById(parametersCreateRequest.getKoiPondId()).orElseThrow(() -> new RuntimeException("KoiPond not found"));
         WaterParameters waterParameters = waterParameterMapper.mapToWaterParameters(parametersCreateRequest);
         waterParameters.setKoiPond(koiPond);
-        return waterParameterMapper.mapToWaterParameterDto(waterParametersRepository.save(waterParameters));
+        waterParametersRepository.save(waterParameters);
+        issueTypeService.init();//RUN THROUGH AND CREATE ISSUE TYPES
+        issueService.detectIssues(waterParameters);//check issue
+        return waterParameterMapper.mapToWaterParameterDto(waterParameters);
     }
 
     @Override
@@ -45,7 +52,9 @@ public class WaterParameterService implements IWaterParameters {
         KoiPond koiPond = koiPondRepository.findById(request.getKoiPondId()).orElseThrow(() -> new RuntimeException("KoiPond not found"));
         waterParameterMapper.updateWaterParameters(waterParameters, request);
         waterParameters.setKoiPond(koiPond);
-        return waterParameterMapper.mapToWaterParameterDto(waterParametersRepository.save(waterParameters));
+        waterParametersRepository.save(waterParameters);
+        issueService.detectIssues(waterParameters);//check issue
+        return waterParameterMapper.mapToWaterParameterDto(waterParameters);
     }
 
     @Override
