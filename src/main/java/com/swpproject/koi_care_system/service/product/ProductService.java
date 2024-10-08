@@ -6,16 +6,10 @@ import com.swpproject.koi_care_system.enums.PromotionStatus;
 import com.swpproject.koi_care_system.exceptions.ResourceNotFoundException;
 import com.swpproject.koi_care_system.mapper.ImageMapper;
 import com.swpproject.koi_care_system.mapper.ProductMapper;
-import com.swpproject.koi_care_system.models.Category;
-import com.swpproject.koi_care_system.models.Image;
-import com.swpproject.koi_care_system.models.Product;
-import com.swpproject.koi_care_system.models.Supplier;
+import com.swpproject.koi_care_system.models.*;
 import com.swpproject.koi_care_system.payload.request.AddProductRequest;
 import com.swpproject.koi_care_system.payload.request.ProductUpdateRequest;
-import com.swpproject.koi_care_system.repository.CategoryRepository;
-import com.swpproject.koi_care_system.repository.ImageRepository;
-import com.swpproject.koi_care_system.repository.ProductRepository;
-import com.swpproject.koi_care_system.repository.SupplierRepository;
+import com.swpproject.koi_care_system.repository.*;
 import com.swpproject.koi_care_system.service.promotion.IPromotionService;
 import com.swpproject.koi_care_system.service.promotion.PromotionService;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +21,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +36,8 @@ public class ProductService implements IProductService {
     private final ImageMapper imageMapper;
     private final SupplierRepository supplierRepository;
     private final IPromotionService promotionService;
+    private final IssueTypeRepository issueTypeRepository;
+
     @Override
     @PreAuthorize("hasRole('ADMIN') or hasRole('SHOP')")
     public Product addProduct(AddProductRequest request) {
@@ -50,7 +48,17 @@ public class ProductService implements IProductService {
                 });
         request.setCategory(category);
         Supplier supplier = supplierRepository.findByName(request.getSupplierName());
-        return productRepository.save(createProduct(request, category,supplier));
+        Product product=createProduct(request, category,supplier);
+        if (!request.getIssueTypeId().isEmpty()) {
+            Set<IssueType> issueTypes = new HashSet<>();
+            for (Long issueTypeId : request.getIssueTypeId()) {
+                IssueType issueType = new IssueType();
+                issueType.setId(issueTypeId);
+                issueTypes.add(issueType);
+            }
+            product.setIssues(issueTypes);
+        }
+        return productRepository.save(product);
     }
     private Product createProduct(AddProductRequest request, Category category, Supplier supplier) {
         return new Product(
@@ -172,6 +180,12 @@ public class ProductService implements IProductService {
                 .toList();
         productDto.setPromotions(promotionDtos);
         return productDto;
+    }
+    @Override
+    public List<Product> getProductsByIssueType(Long issueTypeId) {
+        IssueType issueType = issueTypeRepository.findById(issueTypeId)
+                .orElseThrow(() -> new ResourceNotFoundException("IssueType not found!"));
+        return productRepository.findByIssues(issueType);
     }
     private void updateProductRating(Product product) {
         product.updateRating();
