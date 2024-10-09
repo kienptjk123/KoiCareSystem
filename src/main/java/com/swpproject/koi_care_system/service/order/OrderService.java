@@ -13,6 +13,7 @@ import com.swpproject.koi_care_system.repository.OrderRepository;
 import com.swpproject.koi_care_system.repository.ProductRepository;
 import com.swpproject.koi_care_system.service.cart.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,6 +89,14 @@ public class OrderService implements IOrderService {
     public List<OrderDto> getUserOrders(Long userId) {
         List<Order> orders = orderRepository.findByUserId(userId);
         return  orders.stream().map(orderMapper :: toDto).toList();
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SHOP')")
+    public void updateDeliveredStatus(Long orderId) {
+        Order order = orderRepository.findByOrderId(orderId);
+        order.setOrderStatus(OrderStatus.DELIVERED);
+        orderRepository.save(order);
     }
 
 }

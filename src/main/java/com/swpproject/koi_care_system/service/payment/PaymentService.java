@@ -1,6 +1,7 @@
 package com.swpproject.koi_care_system.service.payment;
 
 import com.swpproject.koi_care_system.dto.PaymentDto;
+import com.swpproject.koi_care_system.enums.OrderStatus;
 import com.swpproject.koi_care_system.mapper.PaymentMapper;
 import com.swpproject.koi_care_system.models.Order;
 import com.swpproject.koi_care_system.models.Payment;
@@ -25,7 +26,13 @@ public class PaymentService implements IPaymentService {
     @Override
     public PaymentDto storePayment(PaymentStoreRequest request) {
         Payment payment = paymentMapper.mapToPayment(request);
-        payment.setOrder(orderRepository.findByOrderId(request.getOrderId()));
+        Order order = orderRepository.findByOrderId(request.getOrderId());
+        if(request.getStatus().equals("00"))
+            order.setOrderStatus(OrderStatus.PROCESSING);
+        else
+            order.setOrderStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+        payment.setOrder(order);
         return paymentMapper.mapToDto(paymentRepository.save(payment));
     }
 
@@ -44,5 +51,4 @@ public class PaymentService implements IPaymentService {
         });
         return paymentDtoList;
     }
-
 }
