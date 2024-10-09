@@ -38,9 +38,9 @@ public class OrderService implements IOrderService {
         order.setAddress(request.getAddress());
         order.setPhone(request.getPhone());
         order.setRecipientName(request.getRecipientName());
+        order.setNote(request.getNote());
         order.setOrderItems(new HashSet<>(orderItemList));
         order.setTotalAmount(calculateTotalAmount(orderItemList));
-
         Order savedOrder = orderRepository.save(order);
         cartService.clearCart(cart.getId());
         return orderMapper.toDto(savedOrder);
