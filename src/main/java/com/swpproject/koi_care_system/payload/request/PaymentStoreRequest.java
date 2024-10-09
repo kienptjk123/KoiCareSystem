@@ -1,11 +1,11 @@
-package com.swpproject.koi_care_system.dto;
+package com.swpproject.koi_care_system.payload.request;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class PaymentDto {
+public class PaymentStoreRequest {
     private LocalDateTime createDate;
     private Double amount;
     private String status;

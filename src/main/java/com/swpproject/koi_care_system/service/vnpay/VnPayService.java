@@ -1,7 +1,7 @@
 package com.swpproject.koi_care_system.service.vnpay;
 
 import com.swpproject.koi_care_system.config.VnPayConfig;
-import com.swpproject.koi_care_system.dto.PaymentDto;
+import com.swpproject.koi_care_system.dto.VnPayDto;
 import com.swpproject.koi_care_system.ultis.VNPayUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class VnPayService {
     @Value("${payment.vnPay.url}")
     private String vnp_PayUrl;
 
-    public PaymentDto createVnPayPayment(HttpServletRequest request) {
+    public VnPayDto createVnPayPayment(HttpServletRequest request) {
         long amount = Integer.parseInt(request.getParameter("amount")) * 100L;
         String bankCode = request.getParameter("bankCode");
         Map<String, String> vnpParamsMap = vnPayConfig.getVNPayConfig();
@@ -35,7 +35,7 @@ public class VnPayService {
         String vnpSecureHash = VNPayUtil.hmacSHA512(secretKey, hashData);
         queryUrl += "&vnp_SecureHash=" + vnpSecureHash;
         String paymentUrl = vnp_PayUrl + "?" + queryUrl;
-        return PaymentDto.builder()
+        return VnPayDto.builder()
                 .message("success")
                 .paymentUrl(paymentUrl).build();
     }
