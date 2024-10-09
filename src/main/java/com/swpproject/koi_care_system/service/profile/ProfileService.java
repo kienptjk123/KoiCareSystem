@@ -31,6 +31,7 @@ public class ProfileService implements IProfileService {
     public UserProfile createProfile(User user) {
         UserProfile userProfile = userProfileMapper.mapToUserProfile(user);
         userProfile.setCreatedDate(LocalDate.now());
+        userProfileRepository.save(userProfile);
         userProfile.setSubscribePlan(subscribePlanService.initDefault(user.getId()));
         return userProfileRepository.save(userProfile);
     }
