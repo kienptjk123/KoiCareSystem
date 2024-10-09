@@ -33,6 +33,8 @@ public class KoiPondService implements IKoiPondService {
         }
         if(addKoiPondRequest.getFile()!=null)
             addKoiPondRequest.setImageUrl(!addKoiPondRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiPondRequest.getFile()):"");
+        else
+            addKoiPondRequest.setImageUrl("");
         return koiPondRepository.save(koiPondMapper.mapToKoiPond(addKoiPondRequest));
     }
     @Override
@@ -60,8 +62,9 @@ public class KoiPondService implements IKoiPondService {
     public KoiPond updateKoiPond(KoiPondUpdateRequest koiPondUpdateRequest, Long koiPondId) {
         return Optional.ofNullable(getKoiPondById(koiPondId)).map(oldKoiPond -> {
             if(koiPondUpdateRequest.getFile()!=null) {
-                if(!koiPondUpdateRequest.getFile().isEmpty())
+                if(!koiPondUpdateRequest.getFile().isEmpty() && !oldKoiPond.getImageUrl().equals(""))
                     try {
+
                         oldKoiPond.setImageUrl(imageStorage.uploadImage(koiPondUpdateRequest.getFile()));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
