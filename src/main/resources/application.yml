@@ -15,9 +15,9 @@ jwt:
   signerKey: "1Xt6QiR02nO30C3YVxkkG/qxQQ9sECaUY44pi2Do2SgF/OACYM7RKc/M+ED95TsX"
 payment:
   vnPay:
-    url: ${VN_PAY_URL}
-    tmnCode: ${VN_PAY_TMN_CODE}
-    secretKey: ${VN_PAY_SECRET_KEY}
+    url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    tmnCode: VB4QBYHD
+    secretKey: UO27N2WHXZB1I1UYQFVW3BQIPF2URZDT
     returnUrl: http://localhost:8080/api/payment/vn-pay-callback
     version: "2.1.0"
     command: "pay"
