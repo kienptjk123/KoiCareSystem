@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    username: koicaresystem@koi-care-system
-    url: jdbc:sqlserver://koi-care-system.database.windows.net:1433;database=koicaresystemdatabase;user=koicaresystem@koi-care-system;password=Application123;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: koicaresystemv3
+    url: jdbc:sqlserver://koicaresystemv3.database.windows.net:1433;database=koicaresystemv3;user=koicaresystemv3@koicaresystemv3;password=Application123;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
     password: Application123
   jpa:
     hibernate:
@@ -29,8 +29,8 @@ spring:
   cloud:
     azure:
       storage:
-        account-name: koicaresystem
-        account-key: 6/52a3DXdwGzC+mt5u+SLWF5nv+5cTaTv+hxi/aNDJR8nElrh2ndKn3xkmWF+Q9Zt2T4LW5Ngliq+AStqEpHeg==
+        account-name: koicareimage
+        account-key: pYRkdLpwU49+2PIK+MOH0BZkEWnu8IppGBH+Q7jG1yyygEhIl5LEGQmEQWrPHMHXrtAiVJBMHS+F+ASt8ZOL0Q==
   servlet:
     multipart:
       enabled: true
@@ -61,3 +61,4 @@ spring:
             token-uri: https://github.com/login/oauth/access_token
             user-info-uri: https://api.github.com/user
             user-name-attribute: id
+

@@ -13,6 +13,12 @@ spring:
     cache: false
 jwt:
   signerKey: "1Xt6QiR02nO30C3YVxkkG/qxQQ9sECaUY44pi2Do2SgF/OACYM7RKc/M+ED95TsX"
+vnpay:
+  tmncode: 7FZC7HJY
+  hashsecret: XVFXGIYGHYIG81N5BF6HSBZ9GV5GS7JN
+  payurl: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+  returnurl: http://localhost:8080/vnpay_return
+  apiurl: https://sandbox.vnpayment.vn/merchant_webapi/merchant.html
 payment:
   vnPay:
     url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
