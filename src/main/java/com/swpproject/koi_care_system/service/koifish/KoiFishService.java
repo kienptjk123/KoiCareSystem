@@ -63,8 +63,10 @@ public class KoiFishService implements IKoiFishService {
     @Override
     public List<KoiFishDto> getAllFishByUserId(Long userId) {
         List<KoiFishDto> koiFishDtos = new ArrayList<>();
-        koiPondService.getKoiPondByUserID(userId).stream().map(koiPond ->
-               koiFishRepository.findByKoiPondId(koiPond.getId()).stream().map(koiFish -> koiFishDtos.add(koiFishMapper.toDto(koiFish)))
+        koiPondService.getKoiPondByUserID(userId).forEach(koiPond ->
+                koiFishRepository.findByKoiPondId(koiPond.getId()).forEach(koiFish ->
+                        koiFishDtos.add(koiFishMapper.toDto(koiFish))
+                )
         );
         return koiFishDtos;
     }

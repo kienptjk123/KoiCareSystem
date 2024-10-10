@@ -82,7 +82,12 @@ public class GrowthHistoryService implements IGrowthHistoryService {
         if (growHistories.size() == 1) {
             throw new IllegalArgumentException("GrowHistory must be at least 1");
         }
-
+        if(!growthHistory.getImageUrl().equals("https://koicareimage.blob.core.windows.net/koicarestorage/defaultGrowthHistory.png"))
+            try{
+                imageStorage.deleteImage(growthHistory.getImageUrl());
+            }catch (Exception e){
+                throw new RuntimeException(e);
+            }
         growthHistoryRepository.delete(growthHistory);
 
         long latestId = growthHistoryRepository.findLatestByKoiFishId(koiFish.getId());
