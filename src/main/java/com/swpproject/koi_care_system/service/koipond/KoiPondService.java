@@ -1,5 +1,6 @@
 package com.swpproject.koi_care_system.service.koipond;
 
+import com.swpproject.koi_care_system.dto.KoiFishDto;
 import com.swpproject.koi_care_system.dto.KoiPondDto;
 import com.swpproject.koi_care_system.exceptions.AlreadyExistsException;
 import com.swpproject.koi_care_system.exceptions.ResourceNotFoundException;
@@ -33,11 +34,12 @@ public class KoiPondService implements IKoiPondService {
         if (koiPondRepository.existsByNameAndUserId(addKoiPondRequest.getName(), addKoiPondRequest.getUser().getId())) {
             throw new AlreadyExistsException("Koi Pond with name " + addKoiPondRequest.getName() + " already exists!");
         }
+        KoiPond koiPond = koiPondMapper.mapToKoiPond(addKoiPondRequest);
         if(addKoiPondRequest.getFile()!=null)
-            addKoiPondRequest.setImageUrl(!addKoiPondRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiPondRequest.getFile()):"https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiPond.jpg");
+            koiPond.setImageUrl(!addKoiPondRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiPondRequest.getFile()):"https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiPond.jpg");
         else
-            addKoiPondRequest.setImageUrl("https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiPond.jpg");
-        return koiPondMapper.toDto(koiPondRepository.save(koiPondMapper.mapToKoiPond(addKoiPondRequest)));
+            koiPond.setImageUrl("https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiPond.jpg");
+        return koiPondMapper.toDto(koiPondRepository.save(koiPond));
     }
     @Override
     @PreAuthorize("hasRole('MEMBER')")
@@ -53,7 +55,16 @@ public class KoiPondService implements IKoiPondService {
     @PreAuthorize("hasRole('MEMBER')")
     public void deleteKoiPond(Long id) {
         koiPondRepository.findById(id)
-                .ifPresentOrElse(koiPondRepository::delete,()-> {
+                .ifPresentOrElse(koiPond -> {
+                    if(!koiPond.getImageUrl().equals("https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiPond.jpg")){
+                        try {
+                            imageStorage.deleteImage(koiPond.getImageUrl());
+                        }catch (Exception e){
+                            throw new RuntimeException(e);
+                        }
+                        koiPondRepository.delete(koiPond);
+                    }
+                },()-> {
                     throw new ResourceNotFoundException("Koi Pond not found!");
                 });
     }

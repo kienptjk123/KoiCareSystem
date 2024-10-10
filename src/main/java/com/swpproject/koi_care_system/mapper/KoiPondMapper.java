@@ -16,6 +16,8 @@ import java.util.List;
 public interface KoiPondMapper {
     KoiPondDto toDto(KoiPond koiPond);
 
+    @Mapping(target = "imageUrl", ignore = true)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "waterParametersList", ignore = true)
     @Mapping(target = "logList", ignore = true)
     KoiPond mapToKoiPond(AddKoiPondRequest addKoiPondRequest);
