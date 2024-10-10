@@ -33,10 +33,10 @@ public class GrowthHistoryService implements IGrowthHistoryService {
         KoiFish koiFish = koiFishRepository.findById(growthCreateRequest.getKoiFishId()).orElseThrow(() -> new AppException(ErrorCode.KOI_FISH_NOT_FOUND));
         GrowthHistory growthHistory = growthHistoryMapper.mapToGrowthHistory(growthCreateRequest);
         if (growthCreateRequest.getFile() != null) {
-            growthCreateRequest.setImageUrl(!growthCreateRequest.getFile().isEmpty() ? imageStorage.uploadImage(growthCreateRequest.getFile()) : "https://koicareimage.blob.core.windows.net/koicarestorage/defaultGrowthHistory.png");
+            growthHistory.setImageUrl(!growthCreateRequest.getFile().isEmpty() ? imageStorage.uploadImage(growthCreateRequest.getFile()) : "https://koicareimage.blob.core.windows.net/koicarestorage/defaultGrowthHistory.png");
         }
         else
-            growthCreateRequest.setImageUrl("https://koicareimage.blob.core.windows.net/koicarestorage/defaultGrowthHistory.png");
+            growthHistory.setImageUrl("https://koicareimage.blob.core.windows.net/koicarestorage/defaultGrowthHistory.png");
         growthHistory.setKoiFish(koiFish);//relation between growHistory and koiFish
         //If new growthHistory is the latest, update KoiFish
         GrowthHistory savedGrowthHistory = growthHistoryRepository.save(growthHistory);

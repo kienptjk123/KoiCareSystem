@@ -39,13 +39,13 @@ public class KoiFishService implements IKoiFishService {
         if(koiFishRepository.existsByName(addKoiFishRequest.getName())){
             throw new AlreadyExistsException("A Koi fish with this name already exists");
         }
-        addKoiFishRequest.setKoiPond(koiPondRepository.findKoiPondsById(addKoiFishRequest.getKoiPondId()));
-        if(addKoiFishRequest.getFile()!=null)
-            addKoiFishRequest.setImageUrl(!addKoiFishRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiFishRequest.getFile()):"https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiFish.jpeg");
-        else
-            addKoiFishRequest.setImageUrl("https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiFish.jpeg");
         KoiFish koiFish = koiFishMapper.mapToKoiFish(addKoiFishRequest);
+        if(addKoiFishRequest.getFile()!=null)
+            koiFish.setImageUrl(!addKoiFishRequest.getFile().isEmpty()?imageStorage.uploadImage(addKoiFishRequest.getFile()):"https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiFish.jpeg");
+        else
+            koiFish.setImageUrl("https://koicareimage.blob.core.windows.net/koicarestorage/defaultKoiFish.jpeg");
         koiFish.setStatus("Alive");
+        koiFish.setKoiPond(koiPondRepository.findKoiPondsById(addKoiFishRequest.getKoiPondId()));
         return koiFishMapper.toDto(koiFishRepository.save(koiFish));
     }
     @Override
