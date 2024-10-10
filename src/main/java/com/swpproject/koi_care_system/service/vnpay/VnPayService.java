@@ -28,6 +28,7 @@ public class VnPayService {
         if (bankCode != null && !bankCode.isEmpty()) {
             vnpParamsMap.put("vnp_BankCode", bankCode);
         }
+        vnpParamsMap.put("vnp_OrderInfo","Thanh toan cho don hang # "+request.getParameter("orderId"));
         vnpParamsMap.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
         //build query url
         String queryUrl = VNPayUtil.getPaymentURL(vnpParamsMap, true);

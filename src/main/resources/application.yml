@@ -24,7 +24,7 @@ payment:
     url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
     tmnCode: VB4QBYHD
     secretKey: UO27N2WHXZB1I1UYQFVW3BQIPF2URZDT
-    returnUrl: https://koi-care-system.vercel.app/member/payment
+    returnUrl: https://koicaresystemv3.azurewebsites.net/api/payment/vn-pay-return
     version: "2.1.0"
     command: "pay"
     orderType: other

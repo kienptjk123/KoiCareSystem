@@ -1,10 +1,12 @@
 package com.swpproject.koi_care_system.payload.request;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class PaymentStoreRequest {
     private LocalDateTime createDate;
     private Double amount;
