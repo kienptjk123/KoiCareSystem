@@ -47,6 +47,7 @@ public class SecurityConfig {
                         // Allow access to Google login page without authentication
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, "/auth/verifyEmail",
+                                "/payment/vn-pay-return",
                                 "/v3/api-docs",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
@@ -62,6 +63,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("https://koi-care-system.vercel.app/member", true)
                         .failureUrl("https://koi-care-system.vercel.app/login?error=true")
                 );
+
 
 
         // Configure JWT-based security

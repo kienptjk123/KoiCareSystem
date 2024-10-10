@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PaymentStoreRequest {
     private LocalDateTime createDate;
-    private Double amount;
+    private Long amount;
     private String status;
     private String invoiceCode;
     private String transactionCode;

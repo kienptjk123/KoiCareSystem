@@ -27,12 +27,18 @@ public class PaymentService implements IPaymentService {
     public PaymentDto storePayment(PaymentStoreRequest request) {
         Payment payment = paymentMapper.mapToPayment(request);
         Order order = orderRepository.findByOrderId(request.getOrderId());
-        if(request.getStatus().equals("00"))
+        if(request.getStatus().equals("00")){
             order.setOrderStatus(OrderStatus.PROCESSING);
-        else
+            payment.setStatus("COMPLETED");
+        }
+        else{
+            payment.setStatus("CANCELLED");
             order.setOrderStatus(OrderStatus.CANCELLED);
+
+        }
         orderRepository.save(order);
         payment.setOrder(order);
+
         return paymentMapper.mapToDto(paymentRepository.save(payment));
     }
 
