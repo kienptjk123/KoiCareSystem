@@ -18,7 +18,7 @@ import java.util.List;
 public class OrderController {
     private final IOrderService orderService;
 
-    @PostMapping("/order")
+    @GetMapping("/order")
     public ResponseEntity<ApiResponse> createOrder(@RequestBody @Valid PlaceOrderRequest request) {
         try {
             OrderDto order =  orderService.placeOrder(request);
