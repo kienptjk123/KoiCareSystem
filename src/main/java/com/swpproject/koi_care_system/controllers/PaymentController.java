@@ -47,11 +47,11 @@ public class PaymentController {
                         .build());
         if (payment.getStatus().equals("COMPLETED")) {
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("https://koi-care-system.vercel.app/member/payment"))
+                    .location(URI.create("https://koi-care-system.vercel.app/member/paymentSuccess"))
                     .build();
         } else {
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .location(URI.create("https://koi-care-system.vercel.app/member/paymenterror"))
+                    .location(URI.create("https://koi-care-system.vercel.app/member/paymentError"))
                     .build();
         }
     }

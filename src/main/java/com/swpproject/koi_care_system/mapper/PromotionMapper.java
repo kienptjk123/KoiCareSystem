@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface PromotionMapper {
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", constant = "PENDING")
     @Mapping(target = "products", ignore = true)
     Promotion mapToPromotion(AddPromotionRequest addPromotionRequest);
