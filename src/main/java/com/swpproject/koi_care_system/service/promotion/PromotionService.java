@@ -51,6 +51,14 @@ public class PromotionService implements IPromotionService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public PromotionDto verifyByAdmin(AdminConfirmPromotionRequest request) {
+        Promotion promotion = promotionRepository.findById(request.getPromotionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Promotion not found with id: " + request.getPromotionId()));
+        promotionMapper.confirmPromotion(promotion,request);
+        return promotionMapper.mapToDto(promotionRepository.save(promotion));
+    }
+    @Override
     @PreAuthorize("hasRole('ADMIN') or hasRole('SHOP')")
     public void deletePromotion(Long id) {
         promotionRepository.findById(id).ifPresentOrElse(promotionRepository::delete,()->{
@@ -103,14 +111,7 @@ public class PromotionService implements IPromotionService {
         promotionRepository.save(promotion);
     }
 
-    @Override
-    @PreAuthorize("hasRole('ADMIN')")
-    public PromotionDto verifyByAdmin(AdminConfirmPromotionRequest request) {
-        Promotion promotion = promotionRepository.findById(request.getPromotionId())
-                .orElseThrow(() -> new ResourceNotFoundException("Promotion not found with id: " + request.getPromotionId()));
-        promotion.setStatus(request.getStatus());
-        return promotionMapper.mapToDto(promotionRepository.save(promotion));
-    }
+
 
     private void applyPromotionToProduct(Promotion promotion){
         promotion.getProducts().forEach(product ->

@@ -51,7 +51,6 @@ public class UserService implements IUserService {
         return userMapper.maptoUserDTO(userRepo.save(user));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDTO> getListUser() {
         return userRepo.findAll().stream()
                 .map(userMapper::maptoUserDTO).toList();
@@ -83,7 +82,6 @@ public class UserService implements IUserService {
         user.setStatus(true);
         user.setRole(Role.MEMBER);
         user.setUserProfile(profileService.createProfile(user));
-
         userRepo.save(user);
     }
 

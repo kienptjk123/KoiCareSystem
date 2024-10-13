@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,9 @@ public class BlogService implements IBlogService {
             blog.setBlogImage(!blogCreateRequest.getFile().isEmpty()?imageStorage.uploadImage(blogCreateRequest.getFile()):"https://koicareimage.blob.core.windows.net/koicarestorage/defaultBlog.jpg");
         else
             blog.setBlogImage("https://koicareimage.blob.core.windows.net/koicarestorage/defaultBlog.jpg");
+        if (blogCreateRequest.getTagIds() == null || blogCreateRequest.getTagIds().isEmpty()) {
+            throw new RuntimeException("Tags cannot be null");
+        }
         blog.setBlogDate(java.time.LocalDate.now());
         Set<Tag> tags = new HashSet<>();
         for (int tagId : blogCreateRequest.getTagIds()) {
@@ -77,6 +81,9 @@ public class BlogService implements IBlogService {
                     throw new RuntimeException(e);
                 }
             }
+        if (blogUpdateRequest.getTagIds() == null || blogUpdateRequest.getTagIds().isEmpty()) {
+            throw new RuntimeException("Tags cannot be null");
+        }
         blogMapper.updateBlog(blog, blogUpdateRequest);
         Set<Tag> tags = new HashSet<>();
         for (int tagId : blogUpdateRequest.getTagIds()) {

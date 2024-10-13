@@ -35,4 +35,20 @@ public class UserProfileController {
                 .data(profileService.getProfile(userId))
                 .build());
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse> getAllProfile(){
+        return ResponseEntity.ok(ApiResponse.builder()
+                        .message("Profile list found")
+                        .data(profileService.getAllProfile())
+                .build());
+    }
+
+    @GetMapping("/all/member")
+    public ResponseEntity<ApiResponse> getAllMemberProfile(){
+        return ResponseEntity.ok(ApiResponse.builder()
+                        .message("Profile member list found")
+                        .data(profileService.getAllMemberProfile())
+                .build());
+    }
 }

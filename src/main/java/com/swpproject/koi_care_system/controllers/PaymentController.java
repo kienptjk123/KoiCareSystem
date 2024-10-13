@@ -31,6 +31,10 @@ public class PaymentController {
     public ResponseEntity<VnPayDto> pay(HttpServletRequest request) {
         return new ResponseEntity<>(vnPayService.createVnPayPayment(request), HttpStatus.OK);
     }
+    @GetMapping("/vn-pay/order")
+    public ResponseEntity<VnPayDto> payForOrder(HttpServletRequest request){
+        return new ResponseEntity<>(vnPayService.createVnPayPaymentViaOrderId(request),HttpStatus.OK);
+    }
     @RequestMapping("vn-pay-return")
     public ResponseEntity<Void> payResponse(HttpServletRequest request){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");

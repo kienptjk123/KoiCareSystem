@@ -118,9 +118,7 @@ public class ProductService implements IProductService {
 
     }
     @Override
-    public List<Product> getAllProducts(int pageNumber, int pageSize, String sortBy, String sortDir) {
-        Sort sort = ("Asc".equalsIgnoreCase(sortDir)) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+    public List<Product> getAllProducts() {
         promotionService.upToDate();
         List<Product> productsTmp = productRepository.findAll();
         productsTmp.forEach(product->{
@@ -131,7 +129,7 @@ public class ProductService implements IProductService {
                 });
             });
         });
-        Page<Product> products = productRepository.findAll(pageable);
+        List<Product> products = productRepository.findAll();
         return products.stream().toList();
     }
     @Override

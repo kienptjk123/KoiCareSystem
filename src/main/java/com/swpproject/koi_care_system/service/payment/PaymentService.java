@@ -8,6 +8,7 @@ import com.swpproject.koi_care_system.models.Payment;
 import com.swpproject.koi_care_system.payload.request.PaymentStoreRequest;
 import com.swpproject.koi_care_system.repository.OrderRepository;
 import com.swpproject.koi_care_system.repository.PaymentRepository;
+import com.swpproject.koi_care_system.service.subscribe.SubscribePlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class PaymentService implements IPaymentService {
     private final PaymentMapper paymentMapper;
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
+    private final SubscribePlanService service;
     @Override
     public PaymentDto storePayment(PaymentStoreRequest request) {
         Payment payment = paymentMapper.mapToPayment(request);
@@ -30,15 +32,14 @@ public class PaymentService implements IPaymentService {
         if(request.getStatus().equals("00")){
             order.setOrderStatus(OrderStatus.PROCESSING);
             payment.setStatus("COMPLETED");
+            service.upgradePremiumAuto(order);
         }
         else{
             payment.setStatus("CANCELLED");
             order.setOrderStatus(OrderStatus.CANCELLED);
-
         }
         orderRepository.save(order);
         payment.setOrder(order);
-
         return paymentMapper.mapToDto(paymentRepository.save(payment));
     }
 
